@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # coding=utf-8
-import logging
 import os
+import logging
+from config import CF
 from datetime import datetime
-
-root_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
 class Logger:
@@ -20,7 +19,7 @@ class Logger:
             fh = logging.FileHandler(self.log_path, encoding='utf-8')
             fh.setLevel(logging.DEBUG)
 
-            # 再创建一个handler，用于输出到控制台
+            # 创建一个handler，用于输出到控制台
             ch = logging.StreamHandler()
             ch.setLevel(logging.INFO)
 
@@ -36,7 +35,7 @@ class Logger:
     @property
     def log_path(self):
         now_month = datetime.now().strftime("%Y%m")
-        return os.path.join(root_dir, 'logs', '{}.log'.format(now_month))
+        return os.path.join(CF.BASE_DIR, 'logs', '{}.log'.format(now_month))
 
     @property
     def fmt(self):

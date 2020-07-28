@@ -2,8 +2,13 @@
 # coding=utf-8
 import urllib3
 import requests
+from config import CF
 from utils.logger import log
+from common.regular import Regular
+from common.setResult import replace_param
+from core.serialize import deserialization
 from requests.exceptions import RequestException
+from common.variables import is_vars
 
 urllib3.disable_warnings()
 
@@ -13,16 +18,24 @@ class HttpRequest:
 
     def __init__(self):
         self.r = requests.session()
+        self.reg = Regular()
 
-    def send_request(self, method: str, url: str, **kwargs):
+    def send_request(self, case, **kwargs):
         """发送请求
-        :param method: 发送方法
-        :param url: 发送路径
+        :param case: 测试用例
         :param kwargs: 其他参数
         :return: request响应
         """
-        pass
-        method = method.upper()
+        if case[CF.URL]:
+            is_vars.set('url', case[CF.URL])
+        if case[CF.HEADERS]:
+            is_vars.set('headers', deserialization(case[CF.HEADERS]))
+
+        method = case[CF.METHOD].upper()
+        url = is_vars.get('url') + case[CF.ROUTE]
+        self.r.headers = is_vars.get('headers')
+        params = replace_param(case)
+        if params: kwargs = params
         try:
             log.info("Request Url: {}".format(url))
             log.info("Request Method: {}".format(method))
@@ -47,10 +60,6 @@ class HttpRequest:
         except Exception as e:
             raise e
 
-    def __call__(self, *args, **kwargs):
-        return self.send_request(*args, **kwargs)
 
-
-req = HttpRequest()
 if __name__ == '__main__':
     log.info("你好")

@@ -8,9 +8,6 @@ from datetime import datetime
 
 class Logger:
     def __init__(self):
-        log_path = self.log_path[:self.log_path.rfind('/')]
-        if not os.path.exists(log_path):
-            os.makedirs(log_path)
         self.logger = logging.getLogger()
         if not self.logger.handlers:
             self.logger.setLevel(logging.DEBUG)
@@ -34,8 +31,11 @@ class Logger:
 
     @property
     def log_path(self):
+        logs_path = os.path.join(CF.BASE_DIR, 'logs')
+        if not os.path.exists(logs_path):
+            os.makedirs(logs_path)
         now_month = datetime.now().strftime("%Y%m")
-        return os.path.join(CF.BASE_DIR, 'logs', '{}.log'.format(now_month))
+        return os.path.join(logs_path, '{}.log'.format(now_month))
 
     @property
     def fmt(self):

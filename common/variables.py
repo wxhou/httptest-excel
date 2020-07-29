@@ -5,16 +5,21 @@
 class VariablePool:
     """全局变量池"""
 
-    def get(self, name):
+    @staticmethod
+    def get(name):
         """获取变量"""
-        return getattr(self, name)
+        return getattr(VariablePool, name)
 
-    def set(self, name, value):
+    @staticmethod
+    def set(name, value):
         """设置变量"""
-        setattr(self, name, value)
+        setattr(VariablePool, name, value)
 
-    def has(self, name):
-        return hasattr(self, name)
+    @staticmethod
+    def has(name):
+        return hasattr(VariablePool, name)
 
 
-is_vars = VariablePool()
+if __name__ == '__main__':
+    VariablePool.set('name', 'wxhou')
+    print(VariablePool.get('name'))

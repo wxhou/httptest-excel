@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
 import smtplib
 from config import CF
 from email.header import Header
@@ -9,10 +8,9 @@ from email.utils import parseaddr, formataddr
 from email.mime.multipart import MIMEMultipart
 
 
-def get_new_report():
+def get_new_report(path):
     """获取最新的报告"""
-    report_file = os.path.join(CF.BASE_DIR, 'report', 'report.html')
-    with open(report_file, encoding='utf-8') as f:
+    with open(path, encoding='utf-8') as f:
         return f.read()
 
 
@@ -22,8 +20,10 @@ def _format_addr(s):
     return formataddr((Header(name, 'utf-8').encode(), addr))
 
 
-def send_report_mail():
+def send_report_mail(path):
     """发送最新的测试报告"""
+    # HTML文件
+    content = get_new_report(path)
     # email地址和口令：
     user = CF.EMAIL_INFO['username']
     pwd = CF.EMAIL_INFO['password']
@@ -40,7 +40,7 @@ def send_report_mail():
         msg['Subject'] = Header("unittest演示测试最新的测试报告", 'utf-8').encode()
 
         # 发送HTML文件
-        msg.attach(MIMEText(get_new_report(), 'html', 'utf-8'))
+        msg.attach(MIMEText(content, 'html', 'utf-8'))
 
         # 发件人邮箱中的SMTP服务器，端口
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
@@ -51,8 +51,3 @@ def send_report_mail():
         print("测试结果邮件发送成功！")
     except smtplib.SMTPException as e:
         print(u"Error: 无法发送邮件", format(e))
-
-
-if __name__ == '__main__':
-    print(get_new_report())
-    send_report_mail()

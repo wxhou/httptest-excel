@@ -3,12 +3,11 @@
 from requests import Response
 from utils.logger import log
 from common.regular import Regular
-from common.variables import is_vars
-from common.excelset import ExcelSet
+from common.excelset import excel_set
+from common.variables import VariablePool
 from core.serialize import is_json_str, deserialization
 from config import CF
 
-excel = ExcelSet()
 reg = Regular()
 
 
@@ -17,10 +16,10 @@ def get_var_result(r: Response, number, case):
     if case[CF.EXTRACT_VARIABLE]:
         for i in case[CF.EXTRACT_VARIABLE].split(','):
             result = reg.find_res(i, r.text)
-            is_vars.set(i, result)
+            VariablePool.set(i, result)
             log.info(f"提取变量{i}={result}")
-            if is_vars.has(i):
-                excel.write_results(number, CF.EXTRACT_VARIABLE, f"提变量{i}失败")
+            if not VariablePool.get(i):
+                excel_set.write_results(number, CF.EXTRACT_VARIABLE, f"提变量{i}失败")
 
 
 def replace_param(case):

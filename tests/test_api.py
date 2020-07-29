@@ -2,12 +2,10 @@
 # coding=utf-8
 import unittest
 from parameterized import parameterized
-from common.excelset import ExcelSet
+from common.excelset import excel_set
 from core.request import HttpRequest
 from common.checkResult import check_result
 from common.setResult import get_var_result
-
-excel_set = ExcelSet()
 
 
 class TestApi(unittest.TestCase):

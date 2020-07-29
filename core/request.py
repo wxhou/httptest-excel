@@ -8,7 +8,7 @@ from common.regular import Regular
 from common.setResult import replace_param
 from core.serialize import deserialization
 from requests.exceptions import RequestException
-from common.variables import is_vars
+from common.variables import VariablePool
 
 urllib3.disable_warnings()
 
@@ -27,13 +27,13 @@ class HttpRequest:
         :return: request响应
         """
         if case[CF.URL]:
-            is_vars.set('url', case[CF.URL])
+            VariablePool.set('url', case[CF.URL])
         if case[CF.HEADERS]:
-            is_vars.set('headers', deserialization(case[CF.HEADERS]))
+            VariablePool.set('headers', deserialization(case[CF.HEADERS]))
 
         method = case[CF.METHOD].upper()
-        url = is_vars.get('url') + case[CF.ROUTE]
-        self.r.headers = is_vars.get('headers')
+        url = VariablePool.get('url') + case[CF.ROUTE]
+        self.r.headers = VariablePool.get('headers')
         params = replace_param(case)
         if params: kwargs = params
         try:

@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # coding=utf-8
-import os
+import shutil
 import openpyxl
 from config import CF
 from openpyxl.styles import Font
 from openpyxl.styles import PatternFill
+from common.variables import VariablePool
 
 
 class ExcelSet:
     """Excel配置"""
 
     def __init__(self):
-        self.path = os.path.join(CF.BASE_DIR, 'data', 'usercase.xlsx')
+        shutil.copyfile(VariablePool.get('excel_input'), VariablePool.get('excel_output'))
+        self.path = VariablePool.get('excel_output')
         self.wb = openpyxl.load_workbook(self.path)
         self.table = self.wb.active
 
@@ -23,6 +25,12 @@ class ExcelSet:
                               min_row, [cell.value for cell in row]))
             min_row += 1
         return all_cases
+
+    def write_color(self, row_n, col_n, fgColor="FF0000"):
+        """写入颜色"""
+        cell = self.table.cell(row_n, col_n + 1)
+        fill = PatternFill("solid", fgColor=fgColor)
+        cell.fill = fill
 
     def write_results(self, row_n, col_n, value, color=True):
         """写入结果"""
@@ -40,6 +48,6 @@ class ExcelSet:
         self.wb.save(self.path)
 
 
+excel_set = ExcelSet()
 if __name__ == '__main__':
-    read = ExcelSet()
-    print(read.get_cases())
+    print(excel_set.get_cases())

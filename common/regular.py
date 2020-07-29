@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 import re
 from utils.logger import log
-from common.variables import is_vars
+from common.variables import VariablePool
 from core.serialize import is_json_str
 
 
@@ -19,9 +19,9 @@ class Regular:
         result = None
         log.info("提取变量：{}".format(keys))
         for i in keys:
-            if is_vars.has(i):
+            if VariablePool.has(i):
                 log.info("替换变量：{}".format(i))
-                result = self.reg.sub(r"\{{%s}}" % i, is_vars.get(i), string)
+                result = self.reg.sub(r"\{{%s}}" % i, VariablePool.get(i), string)
         log.info("替换结果：{}".format(result))
         return result
 

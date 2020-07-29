@@ -10,10 +10,10 @@ class Regular:
     """正则类"""
 
     def __init__(self):
-        self.reg = re
+        self.reg = re.compile
 
     def finds(self, string):
-        return self.reg.findall(r'\{{(.*?)}\}', string)
+        return self.reg(r'\{{(.*?)}\}').findall(string)
 
     def subs(self, keys, string):
         result = None
@@ -21,13 +21,19 @@ class Regular:
         for i in keys:
             if VariablePool.has(i):
                 log.info("替换变量：{}".format(i))
-                result = self.reg.sub(r"\{{%s}}" % i, VariablePool.get(i), string)
+                comment = self.reg(r"\{{%s}}" % i)
+                result = comment.sub(VariablePool.get(i), string)
         log.info("替换结果：{}".format(result))
         return result
 
     def find_res(self, exp, string):
         """在结果中查找"""
         if is_json_str(string):
-            return self.reg.findall(r'\"%s":"(.*?)"' % exp, string)[0]
+            return self.reg(r'\"%s":"(.*?)"' % exp).findall(string)[0]
         else:
-            return self.reg.findall(r'%s' % exp, string)[0]
+            return self.reg(r'%s' % exp).findall(string)[0]
+
+
+if __name__ == '__main__':
+    a = "{'data': {'loginName': 18291900215, 'password': '{{dd636482aca022}}', 'code': None, 'description': 'encrypt'}}"
+    print(Regular().finds(a))

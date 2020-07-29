@@ -30,10 +30,10 @@ def main():
     args = parser.parse_args()
 
     def file_path(arg):
-        if os.popen('pwd').read().strip('\n ') in arg:
+        if os.popen('pwd').read().strip() in arg:
             return arg
         else:
-            return os.path.join(os.popen('pwd').read().strip('\n '), arg)
+            return os.path.join(os.popen('pwd').read().strip(), arg)
 
     VariablePool.set('excel_input', file_path(args.inputfile))
     VariablePool.set('excel_output', file_path(args.outputfile))

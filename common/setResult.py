@@ -20,6 +20,8 @@ def get_var_result(r: Response, number, case):
             log.info(f"提取变量{i}={result}")
             if not VariablePool.get(i):
                 excel_set.write_results(number, CF.EXTRACT_VARIABLE, f"提变量{i}失败")
+    excel_set.write_results(number, CF.RESPONSE_TEXT,
+                            f"ResponseCode：{r.status_code}\nResponseText：{r.text}")
 
 
 def replace_param(case):

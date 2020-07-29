@@ -22,6 +22,7 @@ class CF:
     SPEND_TIME = 10  # 响应时间
     TEST_RESULTS = 11  # 测试结果
     EXTRACT_VARIABLE = 12  # 提取变量
+    RESPONSE_TEXT = 13  # 响应文本
     # 字体大小
     FONT_SET = "微软雅黑"
     FONT_SIZE = 16

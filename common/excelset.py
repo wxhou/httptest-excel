@@ -26,24 +26,24 @@ class ExcelSet:
             min_row += 1
         return all_cases
 
-    def write_color(self, row_n, col_n, fgColor="FF0000"):
+    def write_color(self, row_n, col_n, color=CF.COLOR_FAILED):
         """写入颜色"""
         cell = self.table.cell(row_n, col_n + 1)
-        fill = PatternFill("solid", fgColor=fgColor)
+        fill = PatternFill("solid", fgColor=color)
         cell.fill = fill
 
     def write_results(self, row_n, col_n, value, color=True):
         """写入结果"""
         cell = self.table.cell(row_n, col_n + 1)
         cell.value = value
-        font = Font(name='微软雅黑', size=16)
+        font = Font(name=CF.FONT_SET, size=CF.FONT_SIZE)
         cell.font = font
         if color:
             if value.lower() in ("fail", 'failed'):
-                fill = PatternFill("solid", fgColor="FF0000")
+                fill = PatternFill("solid", fgColor=CF.COLOR_FAILED)
                 cell.fill = fill
             elif value.lower() in ("pass", "ok"):
-                fill = PatternFill("solid", fgColor="00CD00")
+                fill = PatternFill("solid", fgColor=CF.COLOR_PASSED)
                 cell.fill = fill
         self.wb.save(self.path)
 

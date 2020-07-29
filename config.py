@@ -22,6 +22,12 @@ class CF:
     SPEND_TIME = 10  # 响应时间
     TEST_RESULTS = 11  # 测试结果
     EXTRACT_VARIABLE = 12  # 提取变量
+    # 字体大小
+    FONT_SET = "微软雅黑"
+    FONT_SIZE = 16
+    # 颜色配置
+    COLOR_PASSED = "90EE90"
+    COLOR_FAILED = "FA8072"
 
     # 邮箱配置
     EMAIL_INFO = {

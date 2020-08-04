@@ -6,7 +6,6 @@ from config import CF
 from utils.logger import log
 from common.regular import Regular
 from common.setResult import replace_param
-from core.serialize import deserialization
 from requests.exceptions import RequestException
 from common.variables import VariablePool
 
@@ -20,6 +19,14 @@ class HttpRequest:
         self.r = requests.session()
         self.reg = Regular()
 
+    def deserialize(self, headers):
+        """反序列化字典"""
+        results = {}
+        for i in headers.split('\n'):
+            res = i.find(':')
+            results[i[:res].strip()] = i[res + 1:].strip()
+        return results
+
     def send_request(self, case, **kwargs):
         """发送请求
         :param case: 测试用例
@@ -29,13 +36,10 @@ class HttpRequest:
         if case[CF.URL]:
             VariablePool.set('url', case[CF.URL])
         if case[CF.HEADERS]:
-            VariablePool.set('headers', deserialization(case[CF.HEADERS]))
-
+            self.r.headers = self.deserialize(case[CF.HEADERS])
         method = case[CF.METHOD].upper()
         url = VariablePool.get('url') + case[CF.ROUTE]
-        self.r.headers = VariablePool.get('headers')
-        params = replace_param(case)
-        if params: kwargs = params
+        kwargs = replace_param(case[CF.PARAMETER])
         try:
             log.info("Request Url: {}".format(url))
             log.info("Request Method: {}".format(method))

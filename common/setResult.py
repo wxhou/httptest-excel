@@ -26,9 +26,11 @@ def get_var_result(r: Response, number, case):
 
 def replace_param(case):
     """传入参数"""
-    if case[CF.PARAMETER]:
-        if is_json_str(case[CF.PARAMETER]):
-            is_extract = reg.finds(case[CF.PARAMETER])
+    if case:
+        if is_json_str(case):
+            is_extract = reg.finds(case)
             if is_extract:
-                return deserialization(reg.subs(is_extract, case[CF.PARAMETER]))
-    return deserialization(case[CF.PARAMETER])
+                return deserialization(reg.subs(is_extract, case))
+            else:
+                return deserialization(case)
+    return case

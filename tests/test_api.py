@@ -24,7 +24,7 @@ class TestApi(unittest.TestCase):
         """
         测试excel接口用例
         """
-        r = self.req.send_request(case)
+        r = self.req.request(case)
         get_var_result(r, number, case)
         check_result(r, number, case)
 

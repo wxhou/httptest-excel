@@ -15,6 +15,8 @@ urllib3.disable_warnings()
 class HttpRequest:
     """二次封装requests方法"""
 
+    http_method_names = 'get', 'post', 'put', 'delete', 'patch', 'head', 'options'
+
     def __init__(self):
         self.r = requests.session()
         self.reg = Regular()
@@ -27,7 +29,7 @@ class HttpRequest:
             results[i[:res].strip()] = i[res + 1:].strip()
         return results
 
-    def send_request(self, case, **kwargs):
+    def request(self, case, **kwargs):
         """发送请求
         :param case: 测试用例
         :param kwargs: 其他参数
@@ -44,18 +46,14 @@ class HttpRequest:
             log.info("Request Url: {}".format(url))
             log.info("Request Method: {}".format(method))
             log.info("Request Data: {}".format(kwargs))
-            if method == "GET":
-                response = self.r.get(url, **kwargs)
-            elif method == "POST":
-                response = self.r.post(url, **kwargs)
-            elif method == "PUT":
-                response = self.r.put(url, **kwargs)
-            elif method == "DELETE":
-                response = self.r.delete(url, **kwargs)
-            elif method in ("OPTIONS", "HEAD", "PATCH"):
-                response = self.r.request(method, url, **kwargs)
-            else:
-                raise AttributeError("send request method is ERROR!")
+
+            def dispatch(method, *args, **kwargs):
+                if method in self.http_method_names:
+                    handler = getattr(self.r, method)
+                    return handler(*args, **kwargs)
+                else:
+                    raise AttributeError('request method is ERROR!')
+            response = dispatch(method.lower(), url, **kwargs)
             log.info(response)
             log.info("Response Data: {}".format(response.text))
             return response
@@ -63,7 +61,3 @@ class HttpRequest:
             log.exception(format(e))
         except Exception as e:
             raise e
-
-
-if __name__ == '__main__':
-    log.info("你好")

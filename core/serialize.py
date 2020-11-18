@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 import json
-from json.decoder import JSONDecodeError
 
 
 def deserialization(content: json):
@@ -26,7 +25,7 @@ def is_json_str(string):
         try:
             json.loads(string)
             return True
-        except JSONDecodeError:
+        except ValueError:
             return False
     return False
 
